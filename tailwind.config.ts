@@ -8,6 +8,10 @@ export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      boxShadow: {
+        primary:
+          "0 0 5px theme('colors.light'), 0 0 20px theme('colors.primary')",
+      },
       fontFamily: {
         sans: ["var(--font-mont)", ...fontFamily.sans],
       },

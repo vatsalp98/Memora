@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "memora2fc1b4522fc1b452": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d3ft186vck9xdh",
+          "type": "cicd"
+        }
       }
     }
   }

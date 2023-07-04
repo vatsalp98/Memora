@@ -49,10 +49,10 @@ export default function Navbar() {
           )}
           {!user && (
             <Link
-              href="/login"
+              href="/main"
               className="rounded-lg border-2 border-light bg-light px-4 py-1 font-semibold text-dark duration-75 ease-in hover:bg-dark hover:text-light dark:border-dark"
             >
-              Login
+              Get Started
             </Link>
           )}
         </nav>
