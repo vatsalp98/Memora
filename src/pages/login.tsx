@@ -1,44 +1,48 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { Authenticator } from "@aws-amplify/ui-react";
 import { message } from "antd";
 import { Auth } from "aws-amplify";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Footer from "~/components/footer";
 import HeadMeta from "~/components/headMeta";
 import Navbar from "~/components/header";
 import Layout from "~/components/layout";
-import { LoadingSpinner } from "~/components/loadingCustom";
 
 export default function LoginPage() {
-    
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [messageApi, contextHolder] = message.useMessage();
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [messageApi, contextHolder] = message.useMessage();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-    const handleLogin = () => {
-        setLoading(true);
-        const result = Auth.signIn(email, password);
-        result.then((_value) => {
-            setLoading(false);
-            void router.push("/feed");
-        }).catch((error) => {
-            setLoading(false);
-            void messageApi.error(error.message as string);
-        });
-    }
+  const handleLogin = () => {
+    setLoading(true);
+    const result = Auth.signIn(email, password);
+    result
+      .then((_value) => {
+        setLoading(false);
+        void router.push("/feed");
+      })
+      .catch((error) => {
+        setLoading(false);
+        void messageApi.error(error.message as string);
+      });
+  };
 
-    return (
-        <>
-            {contextHolder}
-            <HeadMeta title="Memora | Login" description="Capture your memories, goals and everything in between."/>
-            <Navbar />
-            <div className="w-full min-h-screen inline-block z-0 bg-dark px-32 dark:bg-light">
-                <Layout className={"pt-32 md:pt-16 sm:pt-8"}>
-                    <div className="flex items-center justify-center w-full flex-col text-center">
-                        <div className="text-light dark:text-dark text-2xl font-semibold my-2">
+  return (
+    <>
+      {contextHolder}
+      <HeadMeta
+        title="Memora | Login"
+        description="Capture your memories, goals and everything in between."
+      />
+      <Navbar />
+      <div className="z-0 inline-block min-h-screen w-full bg-dark px-32 dark:bg-light">
+        <Layout className={"pt-32 md:pt-16 sm:pt-8"}>
+          <div className="flex w-full flex-col items-center justify-center text-center">
+            <Authenticator></Authenticator>
+            {/* <div className="text-light dark:text-dark text-2xl font-semibold my-2">
                             Sign in to your account
                         </div>
                         <div className="flex flex-row">
@@ -96,11 +100,11 @@ export default function LoginPage() {
                                     </div>
                                 </div>
                             </form>}
-                        </div>
-                    </div>
-                </Layout>
-            </div>
-            <Footer />
-        </>
-    );
+                        </div> */}
+          </div>
+        </Layout>
+      </div>
+      <Footer />
+    </>
+  );
 }
