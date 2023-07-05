@@ -20,6 +20,19 @@
           "appId": "d3ft186vck9xdh",
           "type": "cicd"
         }
+      },
+      "api": {
+        "memora": {}
+      },
+      "storage": {
+        "memoras3": {}
+      },
+      "function": {
+        "memorauserdbwriter": {
+          "userTable": "User-vgfb7ussxzbxzhxhjos4c2ee24-dev",
+          "deploymentBucketName": "amplify-memora-dev-15726-deployment",
+          "s3Key": "amplify-builds/memorauserdbwriter-723149576c3846563462-build.zip"
+        }
       }
     }
   }

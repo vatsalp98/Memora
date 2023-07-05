@@ -1,0 +1,37 @@
+type User
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["admin"] }
+      { allow: public, operations: [read, create, update] }
+      { allow: private, operations: [read, create, update, delete] }
+    ]
+  ) {
+  id: ID!
+  email: String!
+  phone: String
+  slug: String! @index(name: "bySlug", queryField: "userBySlug")
+  full_name: String!
+  birthday: AWSDate!
+  avatar: String
+  capsules: [Capsule] @hasMany
+}
+
+type Capsule
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["admin"] }
+      { allow: public, operations: [read, create, update] }
+      { allow: private, operations: [read, create, update, delete] }
+    ]
+  ) {
+  id: ID!
+  post_time: AWSDateTime!
+  user_id: ID!
+  user: User @hasOne(fields: ["user_id"])
+  img_url: String
+  content: String
+  is_live: Boolean!
+  is_public: Boolean!
+}

@@ -7,20 +7,31 @@ import Navbar from "~/components/header";
 export default function Home() {
   return (
     <>
-      <HeadMeta title="Memora | Home" description="Capture your memories, goals and everything in between."/>
+      <HeadMeta
+        title="Memora | Home"
+        description="Capture your memories, goals and everything in between."
+      />
       <Navbar />
-      <div className="w-full min-h-screen inline-block z-0 bg-dark px-32 dark:bg-light">
+      <div className="z-0 inline-block min-h-screen w-full bg-dark px-32 dark:bg-light">
         <Layout className={"pt-32 md:pt-16 sm:pt-8"}>
-            <div className="flex items-center justify-between w-full lg:flex-col">
-              <div className="w-1/2 md:w-full">
-                <Image src="/home.svg" alt="Profile Picture" width={550} height={550} className="w-full h-auto lg:hidden md:inline-block md:w-full"
+          <div className="flex w-full items-center justify-between lg:flex-col">
+            <div className="w-1/2 md:w-full">
+              <Image
+                src="/home.svg"
+                alt="Profile Picture"
+                width={550}
+                height={550}
+                className="h-auto w-full md:inline-block md:w-full"
                 priority
-                sizes="(max-width: 768px) 100vw, (max-width:1200px) 50vw, 50vw"/>
-              </div>
-              <div className="w-1/2 flex flex-col items-center self-center lg:w-full lg:text-center pl-10">
-                <p className="text-light dark:text-dark text-2xl">Best social media on earth!</p>
-              </div>
+                sizes="(max-width: 768px) 100vw, (max-width:1200px) 50vw, 50vw"
+              />
             </div>
+            <div className="flex w-1/2 flex-col items-center self-center pl-10 lg:w-full lg:text-center">
+              <p className="text-2xl text-light dark:text-dark">
+                Best social media on earth!
+              </p>
+            </div>
+          </div>
         </Layout>
       </div>
       <Footer />

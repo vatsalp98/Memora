@@ -1,4 +1,39 @@
 {
+  "api": {
+    "memora": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "memora2fc1b4522fc1b452"
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authmemora2fc1b4522fc1b452"
+              }
+            }
+          ],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2024-07-04T07:07:20.387Z",
+              "apiKeyExpirationDays": 365,
+              "description": ""
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
   "auth": {
     "memora2fc1b4522fc1b452": {
       "customAuth": false,
@@ -28,6 +63,31 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "memorauserdbwriter": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "memora2fc1b4522fc1b452"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "memora"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "hosting": {
     "amplifyhosting": {
       "lastPushTimeStamp": "2023-07-04T09:54:55.507Z",
@@ -36,6 +96,30 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_memorauserdbwriter_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "memorauserdbwriter"
+        }
+      ]
+    },
+    "AMPLIFY_function_memorauserdbwriter_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "memorauserdbwriter"
+        }
+      ]
+    },
+    "AMPLIFY_function_memorauserdbwriter_userTable": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "memorauserdbwriter"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {
@@ -51,6 +135,13 @@
           "resourceName": "amplifyhosting"
         }
       ]
+    }
+  },
+  "storage": {
+    "memoras3": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

@@ -1,0 +1,14 @@
+{
+  "resourceName": "memoras3",
+  "policyUUID": "11b1bb1d",
+  "bucketName": "memorabucket",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

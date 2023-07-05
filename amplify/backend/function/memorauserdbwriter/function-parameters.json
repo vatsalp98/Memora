@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "auth": {
+      "memora2fc1b4522fc1b452": [
+        "create",
+        "read",
+        "update"
+      ]
+    },
+    "api": {
+      "memora": [
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "userTable",
+      "environmentVariableName": "USER_TABLE"
+    }
+  ]
+}
