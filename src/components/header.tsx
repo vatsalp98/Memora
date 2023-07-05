@@ -50,7 +50,7 @@ export default function Navbar() {
           {!user && (
             <Link
               href="/main"
-              className="rounded-lg border-2 border-light bg-light px-4 py-1 font-semibold text-dark duration-75 ease-in hover:bg-dark hover:text-light dark:border-dark"
+              className="rounded-lg border-2 border-light shadow-customBlue bg-light px-4 py-1 font-semibold text-dark duration-75 ease-in hover:bg-dark hover:text-light dark:border-dark"
             >
               Get Started
             </Link>
@@ -61,7 +61,7 @@ export default function Navbar() {
         <div className="mt-2 flex items-center justify-center">
           <Link
             href={"/"}
-            className="flex h-16 w-32 items-center justify-center rounded-full bg-light text-2xl font-bold text-dark dark:bg-dark dark:text-light"
+            className="flex h-16 w-32 items-center justify-center rounded-full bg-light text-2xl font-bold text-dark dark:bg-dark dark:text-light shadow-primary"
           >
             Memora
           </Link>

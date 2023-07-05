@@ -11,11 +11,16 @@ export default {
       boxShadow: {
         primary:
           "0 0 5px theme('colors.light'), 0 0 20px theme('colors.primary')",
+        profile:
+          "0 0 5px theme('colors.light'), 0 0 20px theme('colors.profile')",
+        customBlue:
+          "0 0 5px theme('colors.blue.500'), 0 0 20px theme('colors.blue.400')",
       },
       fontFamily: {
         sans: ["var(--font-mont)", ...fontFamily.sans],
       },
       colors: {
+        profile: "#1B272F",
         dark: "#1b1b1b",
         light: "#f5f5f5",
         primary: "#B63E96",

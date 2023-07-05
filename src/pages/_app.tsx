@@ -9,7 +9,7 @@ import { Amplify } from "aws-amplify";
 import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 
-Amplify.configure(awsExports);
+Amplify.configure({ ...awsExports, ssr: true});
 
 const montserrat = Montserrat({
   subsets: ["latin"],

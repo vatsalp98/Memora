@@ -39,8 +39,8 @@ export default function MainApp() {
                         {({ signOut, user }) => (
                             <div className="container mx-auto flex">
                                 <SideNav id={user?.username} signOut={signOut}/>
-                                <div className="min-h-screen flex-grow border-x text-light dark:text-dark">
-                                    <header className="sticky top-0 z-10 border-b bg-dark dark:bg-light pt-2">
+                                <div className="min-h-screen flex-grow border-x-2 border-gray-700 text-light dark:text-dark">
+                                    <header className="sticky top-0 z-10 border-b-2 border-gray-700 bg-dark dark:bg-light pt-2">
                                         <h1 className="mb-2 px-4 text-lg font-bold">Home</h1>
                                     </header>
                                 </div>
