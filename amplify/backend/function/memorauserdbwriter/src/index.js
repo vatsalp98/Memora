@@ -1,19 +1,18 @@
-// /* Amplify Params - DO NOT EDIT
-// 	ENV
-// 	REGION
-// 	AUTH_MEMORA2FC1B4522FC1B452_USERPOOLID
-// 	API_MEMORA_GRAPHQLAPIIDOUTPUT
-// 	API_MEMORA_GRAPHQLAPIENDPOINTOUTPUT
-// 	API_MEMORA_GRAPHQLAPIKEYOUTPUT
-// 	USER_TABLE
-// Amplify Params - DO NOT EDIT */
+/* Amplify Params - DO NOT EDIT
+	ENV
+	REGION
+	AUTH_MEMORA2FC1B4522FC1B452_USERPOOLID
+	API_MEMORA_GRAPHQLAPIIDOUTPUT
+	API_MEMORA_GRAPHQLAPIENDPOINTOUTPUT
+	API_MEMORA_GRAPHQLAPIKEYOUTPUT
+	USER_TABLE
+Amplify Params - DO NOT EDIT */
 
-import { DynamoDB } from "aws-sdk";
-var db = new DynamoDB();
-
+const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb"); // CommonJS import
+const client = new DynamoDBClient();
 const USER_TABLE = process.env.USER_TABLE;
 
-export async function handler(event, context) {
+exports.handler = async (event, context) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
 
   let date = new Date();
@@ -31,22 +30,22 @@ export async function handler(event, context) {
         createdAt: { S: date.toISOString() },
         updatedAt: { S: date.toISOString() },
       },
+      ReturnConsumedCapacity: "TOTAL",
       TableName: USER_TABLE,
     };
 
     try {
-      await db.putItem(params).promise();
-      console.log("success");
+      const command = new PutItemCommand(params);
+      const result = await client.send(command);
+      console.log("RESULT: ", result);
+      context.done(null, event);
     } catch (err) {
       throw new Error(err);
     }
-
-    console.log("Everything executed successfully");
-    context.done(null, event);
   } else {
     return {
       statusCode: 400,
-      body: JSON.stringify("Something went wrong!"),
+      body: JSON.stringify("User Information not present correctly."),
     };
   }
-}
+};
