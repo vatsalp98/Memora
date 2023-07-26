@@ -1,6 +1,5 @@
 import {
   AccountSettings,
-  Alert,
   Card,
   ThemeProvider,
   useAuthenticator,
@@ -48,23 +47,23 @@ function ProfilePage() {
   };
 
   return (
-    <div className="z-0 inline-block w-full bg-dark dark:bg-light">
+    <div className="bg-dark dark:bg-light z-0 inline-block w-full">
       <div className="flex min-h-screen w-full items-center justify-center">
         <div className="container mx-auto flex">
           <SideNav />
-          <div className="min-h-screen flex-grow flex-col border-x-2 border-gray-700 text-light dark:text-dark">
-            <header className="sticky top-0 z-10 border-b-2 border-gray-700 bg-dark pt-2 dark:bg-light">
+          <div className="text-light dark:text-dark min-h-screen flex-grow flex-col border-x-2 border-gray-700">
+            <header className="bg-dark dark:bg-light sticky top-0 z-10 border-b-2 border-gray-700 pt-2">
               <h1 className="mb-2 px-4 text-lg font-bold">Profile</h1>
             </header>
-            <div className="m-5 flex flex-col items-center justify-center gap-5 rounded-lg bg-[#1B272F] p-5 shadow-customBlue">
+            <div className="shadow-customBlue m-5 flex flex-col items-center justify-center gap-5 rounded-lg bg-[#1B272F] p-5">
               <div>
-                <RxAvatar className="h-[100px] w-[100px] text-light " />
+                <RxAvatar className="text-light h-[100px] w-[100px] " />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <span className="text-xl font-semibold text-light">
+                <span className="text-light text-xl font-semibold">
                   {user.attributes?.name}
                 </span>
-                <span className="text-sm text-light">
+                <span className="text-light text-sm">
                   {user.attributes?.email}
                 </span>
               </div>
@@ -89,13 +88,13 @@ function ProfilePage() {
                 <h2 className="text-light dark:text-dark">Tags</h2>
               </div>
               <div className="flex px-2">
-                <div className="m-2 rounded-full bg-profile/80 px-2 py-1 text-light md:px-4 md:py-2">
+                <div className="bg-profile/80 text-light m-2 rounded-full px-2 py-1 md:px-4 md:py-2">
                   Car
                 </div>
-                <div className="m-2 rounded-full bg-profile/80 px-2 py-1 text-light md:px-4 md:py-2">
+                <div className="bg-profile/80 text-light m-2 rounded-full px-2 py-1 md:px-4 md:py-2">
                   Fitness
                 </div>
-                <div className="m-2 rounded-full bg-profile/80 px-2 py-1 text-light md:px-4 md:py-2">
+                <div className="bg-profile/80 text-light m-2 rounded-full px-2 py-1 md:px-4 md:py-2">
                   Goals
                 </div>
               </div>
@@ -105,7 +104,7 @@ function ProfilePage() {
                 <h2 className="text-light dark:text-dark">
                   Account Information
                 </h2>
-                <div className="flex flex-col px-2 py-2 text-light dark:text-dark">
+                <div className="text-light dark:text-dark flex flex-col px-2 py-2">
                   <ThemeProvider theme={theme}>
                     <Card width={"500px"}>
                       <AccountSettings.ChangePassword onSuccess={onSuccess} />
