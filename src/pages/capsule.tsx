@@ -11,11 +11,15 @@ import ProfileImage from "~/components/profileImage";
 import SideNav from "~/components/sideNav";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "~/components/Button";
-import { API, withSSRContext } from "aws-amplify";
+import { API, Storage, graphqlOperation, withSSRContext } from "aws-amplify";
 import { createCapsule } from "~/graphql/mutations";
 import { GRAPHQL_AUTH_MODE, type GraphQLQuery } from "@aws-amplify/api";
-import type { Capsule, CreateCapsuleMutation } from "~/API";
-import { useMutation } from "react-query";
+import {
+  ListCapsulesQuery,
+  type Capsule,
+  type CreateCapsuleMutation,
+} from "~/API";
+import { useMutation, useQuery } from "react-query";
 import { LoadingSpinner } from "~/components/loadingCustom";
 import dayjs from "dayjs";
 import { listCapsules } from "~/graphql/queries";
@@ -59,6 +63,7 @@ export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 
 function CapsulePage({ capsules = [] }) {
   const { user } = useAuthenticator();
+  const [selectedImage, setSelectedImage] = useState<File>();
   const [isPublic, setIsPublic] = useState(true);
   const { register, handleSubmit, formState } = useForm<
     z.infer<typeof formValuesSchema>
@@ -66,14 +71,32 @@ function CapsulePage({ capsules = [] }) {
     resolver: zodResolver(formValuesSchema),
   });
 
-  const { mutate, isLoading } = useMutation({
+  const {
+    data: queryData,
+    isLoading: queryLoading,
+    refetch: refetchQuery,
+  } = useQuery({
+    queryFn: async () => {
+      const result = await API.graphql<GraphQLQuery<ListCapsulesQuery>>({
+        query: listCapsules,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+      });
+      return result.data?.listCapsules?.items;
+    },
+  });
+
+  const { mutate, isLoading: mutationLoading } = useMutation({
     mutationFn: async (values: z.infer<typeof formValuesSchema>) => {
+      const fileUpload = await Storage.put(
+        selectedImage?.name as string,
+        selectedImage
+      );
       const data = {
         is_live: false,
         is_public: values.isPublic,
         post_time: dayjs(values.postTime).toISOString(),
         content: values.postText,
-        img_url: values.img,
+        img_url: fileUpload.key,
         user_id: user.username,
       };
       const result = await API.graphql<GraphQLQuery<CreateCapsuleMutation>>({
@@ -83,9 +106,14 @@ function CapsulePage({ capsules = [] }) {
         },
         authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
       });
+      void refetchQuery();
       return result.data?.createCapsule?.id;
     },
   });
+
+  function onChange(e: BaseSyntheticEvent) {
+    setSelectedImage(e.target.files[0] as File);
+  }
 
   function onSubmit(
     values: z.infer<typeof formValuesSchema>,
@@ -98,21 +126,21 @@ function CapsulePage({ capsules = [] }) {
 
   return (
     <>
-      <div className="bg-dark dark:bg-light z-0 inline-block w-full">
+      <div className="z-0 inline-block w-full bg-dark dark:bg-light">
         <div className="flex min-h-screen w-full items-center justify-center">
           <div className="container mx-auto flex">
             <SideNav />
-            <div className="text-light dark:text-dark min-h-screen flex-grow flex-col border-x-2 border-gray-700">
-              <header className="bg-dark dark:bg-light sticky top-0 z-10 flex border-b-2 border-gray-700 pt-2">
+            <div className="min-h-screen flex-grow flex-col border-x-2 border-gray-700 text-light dark:text-dark">
+              <header className="sticky top-0 z-10 flex border-b-2 border-gray-700 bg-dark pt-2 dark:bg-light">
                 <h1 className="mb-2 px-4 text-lg font-bold">Time Capsule</h1>
               </header>
-              <div className="shadow-customBlue m-5 flex flex-col rounded-lg border border-gray-700">
-                {isLoading && (
+              <div className="m-5 flex flex-col rounded-lg border-none bg-slate-400 shadow-primary">
+                {mutationLoading && (
                   <div className="flex w-full items-center justify-center">
                     <LoadingSpinner />
                   </div>
                 )}
-                {!isLoading && (
+                {!mutationLoading && (
                   <form
                     className="flex flex-col gap-2 p-4"
                     onSubmit={handleSubmit(onSubmit)}
@@ -122,7 +150,7 @@ function CapsulePage({ capsules = [] }) {
                       <textarea
                         {...register("postText", { required: true })}
                         rows={2}
-                        className="text-dark dark:bg-light dark:text-light flex-grow resize-none overflow-hidden rounded-lg bg-blue-200 p-4 text-lg outline-none"
+                        className="flex-grow resize-none overflow-hidden rounded-lg bg-blue-200 p-4 text-lg text-dark outline-none dark:bg-light dark:text-light"
                         placeholder="Whats happening?"
                       />
                     </div>
@@ -130,15 +158,19 @@ function CapsulePage({ capsules = [] }) {
                       <div className="flex gap-3">
                         {/* Image Upload */}
                         <div className="cursor-pointer px-2 py-1">
-                          <BsCardImage className="text-light dark:text-dark text-3xl duration-75 ease-in hover:text-primary" />
+                          <input
+                            type="file"
+                            onChange={onChange}
+                            className="rounded-lg border p-2 shadow-md"
+                          />
                         </div>
                         {/* Public/Private Toggle */}
-                        <div className="cursor-pointer px-3 py-1">
+                        <div className="my-auto cursor-pointer px-3">
                           <label className="relative mr-5 inline-flex cursor-pointer items-center">
                             <input
                               {...register("isPublic", { required: true })}
                               type="checkbox"
-                              className="peer sr-only"
+                              className="peer sr-only py-2"
                               checked={isPublic}
                               onChange={(e) => setIsPublic(e.target.checked)}
                             />
@@ -149,14 +181,14 @@ function CapsulePage({ capsules = [] }) {
                           </label>
                         </div>
                         {/* Date Selection */}
-                        <div className="cursor-pointer px-2 py-1">
+                        <div className="my-auto cursor-pointer px-1">
                           <span className="mx-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                             Post Time
                           </span>
                           <input
                             {...register("postTime", { required: true })}
                             type="datetime-local"
-                            className="cursor-pointer rounded-lg border p-2 hover:border-gray-500"
+                            className="cursor-pointer rounded-lg border p-2 text-dark hover:border-gray-500"
                           />
                         </div>
                       </div>
@@ -179,18 +211,27 @@ function CapsulePage({ capsules = [] }) {
                 </div>
               </div>
               <div className="flex flex-col gap-y-5 px-5">
-                {capsules.map((capsule: Capsule) => (
-                  <div
-                    key={capsule.id}
-                    className="mx-auto w-full rounded-lg border p-2 shadow-lg"
-                  >
-                    {capsule.content}
-                    <div>Created by {capsule.user?.full_name}</div>
-                    <div>isLive: {capsule.is_live.toString()}</div>
-                    <div>isPublic: {capsule.is_public.toString()}</div>
-                    <div>Post Time: {dayjs(capsule.post_time).toString()}</div>
+                {queryLoading && (
+                  <div className="flex w-full items-center justify-center">
+                    <LoadingSpinner />
                   </div>
-                ))}
+                )}
+
+                {queryData != null &&
+                  queryData.map((capsule) => (
+                    <div
+                      key={capsule?.id}
+                      className="mx-auto w-full rounded-lg border p-2 shadow-lg"
+                    >
+                      {capsule?.content}
+                      <div>Created by {capsule?.user?.full_name}</div>
+                      <div>isLive: {capsule?.is_live.toString()}</div>
+                      <div>isPublic: {capsule?.is_public.toString()}</div>
+                      <div>
+                        Post Time: {dayjs(capsule?.post_time).toString()}
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>

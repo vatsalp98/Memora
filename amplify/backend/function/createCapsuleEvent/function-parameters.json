@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "auth": {
+      "memora2fc1b4522fc1b452": [
+        "create",
+        "read",
+        "update"
+      ]
+    },
+    "api": {
+      "memora": [
+        "Query",
+        "Mutation"
+      ]
+    },
+    "storage": {
+      "memoras3": [
+        "create",
+        "read",
+        "update"
+      ],
+      "User:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "Capsule:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
